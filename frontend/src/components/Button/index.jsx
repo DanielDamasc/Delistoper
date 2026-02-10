@@ -1,4 +1,4 @@
-const Button = ({children, isLoading}) => {
+const Button = ({children, isLoading, ...rest }) => {
     return (
         <button
             className={`
@@ -8,6 +8,7 @@ const Button = ({children, isLoading}) => {
                 flex justify-center items-center
             `}
             disabled={isLoading}
+            {...rest}
         >
             {children}
         </button>

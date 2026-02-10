@@ -1,23 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
-import Button from './components/Button/index.jsx'
-import Input from './components/Input/index.jsx'
+import Login from './pages/Login';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <div>
-      {/* <Button children={'Enviar'} isLoading={false}>
-      </Button> */}
-      <Input label={'E-mail'}>
-      </Input>
-      <Input label={'Senha'}>
-      </Input>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+
+        {/* Rota Inicial (Login) */}
+        <Route path="/" element={<Login />} />
+
+        {/* Qualquer outra rota redireciona para o login */}
+        <Route path="*" element={<Navigate to="/" />} />
+
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
