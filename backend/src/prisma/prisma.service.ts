@@ -6,7 +6,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   private client = prisma;
 
   async onModuleInit() {
-    await this.client.$connect();
+    await this.client.$connect(); // O método conecta direto no "this"
     console.log('[Prisma] Connected to database');
   }
 
