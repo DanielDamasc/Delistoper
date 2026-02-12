@@ -4,6 +4,7 @@ import Input from '../components/Input/index.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import loginImg from '../assets/login.png';
 import api from '../services/api.js';
+import LogoSmall from '../components/Logo/logo-small.jsx';
 
 const Register = () => {
     // Estados para controlar as variáveis.
@@ -62,6 +63,9 @@ const Register = () => {
 
         {/* Card de Registro */}
         <div className="max-w-lg w-full p-8">
+
+          {/* Logo */}
+          <LogoSmall />
           
           {/* Cabeçalho */}
           <div className="mb-8">
