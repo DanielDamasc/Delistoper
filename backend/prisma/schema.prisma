@@ -12,4 +12,13 @@ model User {
   name     String
   email    String @unique
   password String
+  projects Project[]
+}
+
+model Project {
+  id             Int @id @default(autoincrement())
+  name           String @unique
+  description    String?
+  user           User @relation(fields: [userId], references: [id])
+  userId         Int
 }
