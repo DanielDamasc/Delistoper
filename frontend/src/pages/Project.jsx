@@ -1,12 +1,14 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import Header from "../components/Header/Header";
-import { CircleArrowLeft } from "lucide-react"
+import { CircleArrowLeft, Plus } from "lucide-react"
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import CreateTaskModal from "../components/Modals/CreateTaskModal";
 
 const Project = () => {
     const { id } = useParams(); // Pega o ID da URL.
     const location = useLocation(); // Pega o objeto passado no Link.
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Pega os dados do projeto passados no state. 
     // Isso funciona até o momento que o usuário der f5 ou caso ele venha direto para este link.
@@ -37,6 +39,10 @@ const Project = () => {
         getProject();
     }, [id]);
 
+    const handleNewTask = (taskData) => {
+        
+    }
+
     return (
         <div className="min-h-screen">
             <Header />
@@ -62,23 +68,39 @@ const Project = () => {
                         <div className="flex flex-col md:flex-row md:items-start gap-6">
                             
                             {/* Ícone Grande com a Inicial */}
-                            <div className="flex-shrink-0">
+                            <div className="flex-shrink-0 hidden md:block">
                                 <div className="w-16 h-16 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-3xl font-bold shadow-md">
                                     {project.name.charAt(0).toUpperCase()}
                                 </div>
                             </div>
 
-                            {/* Textos */}
-                            <div className="flex-1">
-                                <div className="flex justify-between items-start">
-                                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                                        {project.name}
-                                    </h1>
-                                    
-                                    {/* Badge opcional de ID */}
-                                    <span className="text-xs font-mono text-gray-400 bg-gray-100 px-2 py-1 rounded border border-gray-200">
-                                        #{project.id}
-                                    </span>
+                            {/* Conteúdo Principal */}
+                            <div className="flex-1 w-full">
+
+                                <div className="flex flex-row justify-between items-start md:items-center gap-4 mb-4">
+                                    {/* Titulo + ID */}
+                                    <div className="flex items-center gap-3">
+                                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                                            {project.name}
+                                        </h1>
+                                    </div>
+
+                                    <button
+                                        onClick={() => setIsModalOpen(true)}
+                                        className="
+                                        flex items-center 
+                                        gap-1.5 md:gap-2
+                                        bg-indigo-600 hover:bg-indigo-700 text-white 
+                                        px-3 py-1.5 md:px-4 md:py-2
+                                        text-sm md:text-base
+                                        rounded-lg font-medium 
+                                        transition-all shadow-sm hover:shadow-md
+                                        active:scale-95
+                                        "
+                                    >
+                                        <Plus size={20} />
+                                        New Task
+                                    </button>
                                 </div>
                                 
                                 <p className="text-gray-600 text-lg leading-relaxed">
@@ -99,6 +121,11 @@ const Project = () => {
                 )}
                 
             </main>
+
+            <CreateTaskModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     );
 }

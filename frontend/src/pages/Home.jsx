@@ -3,6 +3,7 @@ import Header from "../components/Header/Header";
 import CreateProjectModal from "../components/Modals/CreateProjectModal";
 import ProjectCard from "../components/ProjectCard";
 import api from '../services/api.js';
+import { Plus } from "lucide-react";
 
 const Home = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,9 +47,10 @@ const Home = () => {
 
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition-all flex items-center"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 gap-2 rounded-lg font-medium shadow-sm transition-all flex items-center"
                     >
-                        + New Project
+                        <Plus size={20} />
+                        New Project
                     </button>
                 </div>
 
