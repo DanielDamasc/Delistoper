@@ -2,11 +2,45 @@ import { use, useState } from "react";
 import Input from "../Input/index.jsx";
 import Textarea from "../Textarea/index.jsx";
 import Button from "../Button/index.jsx";
+import api from '../../services/api.js';
 
-const CreateProjectModal = ({ isOpen, onClose }) => {
+const CreateProjectModal = ({ isOpen, onClose, onProjectCreated }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        setIsLoading(true);
+
+        try {
+            const response = await api.post('/project/create',{
+                name,
+                description
+            });
+
+            // Passa para o pai adicionar na lista de projetos.
+            onProjectCreated(response.data);
+
+            // Limpa as variáveis e fecha o modal.
+            setName('');
+            setDescription('');
+            onClose();
+
+        } catch (err) {
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Erro ao fazer login. Tente novamente mais tarde.');
+            }
+            console.log(err);
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     // Caso não esteja aberto, não renderiza nada.
     if (!isOpen) {
@@ -21,7 +55,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
             <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative animate-fade-in-down">
                 <h1 className="text-xl font-bold mb-4 text-gray-800">Novo Projeto</h1>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                     <Input
                         label="Nome do Projeto"
                         type="text"
