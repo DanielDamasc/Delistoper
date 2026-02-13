@@ -4,17 +4,24 @@ import { CircleArrowLeft, Plus } from "lucide-react"
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import CreateTaskModal from "../components/Modals/CreateTaskModal";
+import CreateButton from "../components/CreateButton";
 
 const Project = () => {
     const { id } = useParams(); // Pega o ID da URL.
     const location = useLocation(); // Pega o objeto passado no Link.
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(!location.state?.projectData);
 
     // Pega os dados do projeto passados no state. 
     // Isso funciona até o momento que o usuário der f5 ou caso ele venha direto para este link.
     // Caso ele dê f5, os dados devem ser buscados no backend.
     const [project, setProject] = useState(location.state?.projectData || null)
-    const [isLoading, setIsLoading] = useState(!location.state?.projectData);
+
+    const [tasks, setTasks] = useState([]);
+
+    const handleNewTask = (taskData) => {
+        setTasks((prevTasks) => [taskData, ...prevTasks]);
+    }
 
     useEffect(() => {
         // Se já tem os dados que vieram da página anterior, não faz nada
@@ -38,10 +45,6 @@ const Project = () => {
 
         getProject();
     }, [id]);
-
-    const handleNewTask = (taskData) => {
-        
-    }
 
     return (
         <div className="min-h-screen">
@@ -85,22 +88,10 @@ const Project = () => {
                                         </h1>
                                     </div>
 
-                                    <button
+                                    <CreateButton 
+                                        children={'New Task'}
                                         onClick={() => setIsModalOpen(true)}
-                                        className="
-                                        flex items-center 
-                                        gap-1.5 md:gap-2
-                                        bg-indigo-600 hover:bg-indigo-700 text-white 
-                                        px-3 py-1.5 md:px-4 md:py-2
-                                        text-sm md:text-base
-                                        rounded-lg font-medium 
-                                        transition-all shadow-sm hover:shadow-md
-                                        active:scale-95
-                                        "
-                                    >
-                                        <Plus size={20} />
-                                        New Task
-                                    </button>
+                                    />
                                 </div>
                                 
                                 <p className="text-gray-600 text-lg leading-relaxed">
@@ -125,6 +116,8 @@ const Project = () => {
             <CreateTaskModal 
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                onTaskCreated={handleNewTask}
+                projectId={id}
             />
         </div>
     );

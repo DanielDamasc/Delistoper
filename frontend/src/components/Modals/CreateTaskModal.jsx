@@ -4,16 +4,55 @@ import Textarea from "../Textarea/index.jsx";
 import PrioritySelector from "../PrioritySelector/index.jsx";
 import Date from "../Date/index.jsx";
 import Button from "../Button/index.jsx";
+import api from '../../services/api.js';
 
-const CreateTaskModal = ({isOpen, onClose}) => {
+const CreateTaskModal = ({isOpen, onClose, onTaskCreated, projectId}) => {
+    // Dados do modal.
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState('');
     const [dueDate, setDueDate] = useState('');
+
+    // Variáveis de controle.
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
 
+        setIsLoading(true);
+
+        const payload = {
+            title: title,
+            description: description,
+            priority: priority,
+            dueDate: dueDate === "" ? null : dueDate // Envia como null para evitar erro no validator.
+        }
+
+        try {
+            const response = await api.post(`/task/${projectId}`, payload);
+
+            // Passa para o pai adicionar na lista de projetos.
+            onTaskCreated(response.data);
+
+            // Limpa as variáveis e fecha o modal.
+            setTitle('');
+            setDescription('');
+            setPriority('');
+            setDueDate('');
+            onClose();
+
+        } catch (err) {
+            if (err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Erro ao criar projeto. Tente mais tarde.');
+            }
+            console.log(err);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     // Caso não esteja aberto, não renderiza nada.

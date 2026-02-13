@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Habilita CORS para frontend fazer as requisições.
   app.enableCors({
-    origin: 'http://localhost:5174', // Endereço do React
+    origin: 'http://localhost:5173', // Endereço do React
   });
 
   await app.listen(process.env.PORT ?? 3000);
