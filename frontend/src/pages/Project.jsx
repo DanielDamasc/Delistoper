@@ -73,7 +73,6 @@ const Project = () => {
         if (destination.droppableId !== source.droppableId) {
             const taskId = parseInt(draggableId); // Id da tarefa que foi arrastada.
             const newStatus = destination.droppableId; // Id da coluna de destino.
-            console.log(newStatus);
 
             // Atualiza visualmente na hora.
             setTasks((prevTasks) => {
@@ -83,6 +82,11 @@ const Project = () => {
             });
 
             // Salva no backend...
+            try {
+                await api.patch(`/task/${taskId}`, { status: newStatus });
+            } catch (error) {
+                console.log("Erro ao mover tarefa", error);
+            }
         }
     }
 
