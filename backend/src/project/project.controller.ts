@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectService } from './project.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -25,5 +25,11 @@ export class ProjectController {
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
         return this.projectService.findOne(req.user.sub, id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    async delete(@Param('id', ParseIntPipe) id: number) {
+        return this.projectService.delete(id);
     }
 }

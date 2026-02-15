@@ -37,4 +37,12 @@ export class ProjectService {
            }
         });
     }
+
+    async delete(projectId: number) {
+        return this.prismaService.prismaClient.project.delete({
+            where: {
+                id: projectId
+            }
+        });
+    }
 }

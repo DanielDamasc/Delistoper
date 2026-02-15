@@ -1,17 +1,19 @@
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header/Header";
-import { CircleArrowLeft, Plus } from "lucide-react"
+import { CircleArrowLeft, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import CreateTaskModal from "../components/Modals/CreateTaskModal";
 import CreateButton from "../components/CreateButton";
 import KanbanColumn from "../components/KanbanColumn";
 import { DragDropContext } from '@hello-pangea/dnd';
+import DeleteProjectModal from "../components/Modals/DeleteProjectModal";
 
 const Project = () => {
     const { id } = useParams(); // Pega o ID da URL.
     const location = useLocation(); // Pega o objeto passado no Link.
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(!location.state?.projectData);
 
     // Pega os dados do projeto passados no state. 
@@ -24,6 +26,8 @@ const Project = () => {
     const handleNewTask = (taskData) => {
         setTasks((prevTasks) => [taskData, ...prevTasks]);
     }
+
+    const navigate = useNavigate();
 
     useEffect(() => {        
         const getProject = async () => {
@@ -132,10 +136,26 @@ const Project = () => {
                                         </h1>
                                     </div>
 
-                                    <CreateButton 
-                                        children={'New Task'}
-                                        onClick={() => setIsModalOpen(true)}
-                                    />
+                                    <div className="flex flex-row gap-2">
+
+                                        <CreateButton 
+                                            children={'New Task'}
+                                            onClick={() => setIsModalOpen(true)}
+                                        />
+
+                                        <button
+                                            className="flex items-center
+                                                bg-red-600 hover:bg-red-700 text-white
+                                                text-sm md:text-base px-2.5
+                                                rounded-lg font-medium 
+                                                transition-all shadow-sm hover:shadow-md
+                                                active:scale-95"
+                                            onClick={() => setIsDeleteOpen(true)}
+                                        >
+                                            <Trash2 size={20} />
+                                        </button>
+
+                                    </div>
                                 </div>
                                 
                                 <p className="text-gray-600 text-md md:text-lg leading-relaxed">
@@ -190,6 +210,13 @@ const Project = () => {
                 onClose={() => setIsModalOpen(false)}
                 onTaskCreated={handleNewTask}
                 projectId={id}
+            />
+
+            <DeleteProjectModal 
+                isOpen={isDeleteOpen}
+                onClose={() => setIsDeleteOpen(false)}
+                projectId={id}
+                onSuccess={() => navigate('/home')}
             />
         </div>
     );
