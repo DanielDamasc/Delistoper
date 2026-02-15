@@ -1,6 +1,7 @@
+import { Draggable } from "@hello-pangea/dnd";
 import { Calendar } from "lucide-react";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, index }) => {
 
     // Estilos do status.
     const priorityStyles = {
@@ -10,31 +11,43 @@ const TaskCard = ({ task }) => {
     };
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-        >
-            <div className="flex justify-start items-start mb-2">
-                <span className={`text-xs font-semibold px-2 py-1 rounded-md flex items-center gap-1
-                    ${priorityStyles[task.priority].bg} ${priorityStyles[task.priority].color}`}>
-                        {priorityStyles[task.priority].label}
-                </span>
-            </div>
+        <Draggable draggableId={task.id.toString()} index={index}>
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps} // Diz que o card inteiro pode ser puxado.
 
-            <h4 className="font-semibold text-gray-800 text-sm mb-1 leading-snug">
-                {task.title}
-            </h4>
-            {task.description && (
-                <p className="text-xs text-gray-500 line-clamp-2 mb-3">
-                    {task.description}
-                </p>
-            )}
+                    className={`relative bg-white p-4 rounded-lg border border-gray-200 transition-all group
+                        ${snapshot.isDragging ? 'shadow-xl scale-105 rotate-2 z-50' : 'shadow-sm hover:shadow hover:border-indigo-300'}`}
+                    style={provided.draggableProps.style}
+                >
+                    
+                    <div className="flex justify-start items-start mb-2">
+                        <span className={`text-xs font-semibold px-2 py-1 rounded-md flex items-center gap-1
+                            ${priorityStyles[task.priority].bg} ${priorityStyles[task.priority].color}`}>
+                                {priorityStyles[task.priority].label}
+                        </span>
+                    </div>
 
-            {task.dueDate && (
-                <div className="flex items-center gap-1 text-xs text-gray-500 font-normal mt-3 pt-3 border-t border-gray-50">
-                    <Calendar size={12} />
-                    {new Date(task.dueDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+                    <h4 className="font-semibold text-gray-800 text-sm mb-1 leading-snug">
+                        {task.title}
+                    </h4>
+                    {task.description && (
+                        <p className="text-xs text-gray-500 line-clamp-2 mb-3">
+                            {task.description}
+                        </p>
+                    )}
+
+                    {task.dueDate && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500 font-normal mt-3 pt-3 border-t border-gray-50">
+                            <Calendar size={12} />
+                            {new Date(task.dueDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
+                        </div>
+                    )}
                 </div>
             )}
-        </div>
+        </Draggable>
     );
 }
 

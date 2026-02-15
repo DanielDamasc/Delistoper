@@ -6,6 +6,7 @@ import api from "../services/api";
 import CreateTaskModal from "../components/Modals/CreateTaskModal";
 import CreateButton from "../components/CreateButton";
 import KanbanColumn from "../components/KanbanColumn";
+import { DragDropContext } from '@hello-pangea/dnd';
 
 const Project = () => {
     const { id } = useParams(); // Pega o ID da URL.
@@ -51,6 +52,39 @@ const Project = () => {
 
         getProject();
     }, [id]);
+
+    // Função ao soltar o card.
+    const handleDragEnd = async (result) => {
+        const { destination, source, draggableId } = result;
+
+        // Se soltou fora da coluna não faz nada
+        if (!destination) {
+            return ;
+        }
+
+        // Se soltou no mesmo lugar que pegou não faz nada
+        if (destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return ;
+        }
+
+        // Se mudou de coluna do kanban
+        if (destination.droppableId !== source.droppableId) {
+            const taskId = parseInt(draggableId); // Id da tarefa que foi arrastada.
+            const newStatus = destination.droppableId; // Id da coluna de destino.
+            console.log(newStatus);
+
+            // Atualiza visualmente na hora.
+            setTasks((prevTasks) => {
+                return prevTasks.map((task) => {
+                    return task.id === taskId ? { ...task, status: newStatus } : task
+                });
+            });
+
+            // Salva no backend...
+        }
+    }
 
     return (
         <div className="min-h-screen">
@@ -113,24 +147,29 @@ const Project = () => {
 
                 {!isLoading && project && (
                     <div className="mt-8 pb-4">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <DragDropContext onDragEnd={handleDragEnd}>
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                            <KanbanColumn 
-                                title="A fazer"
-                                tasks={tasks.filter(t => t.status === 'TODO')}
-                            />
+                                <KanbanColumn 
+                                    title="A fazer"
+                                    status="TODO"
+                                    tasks={tasks.filter(t => t.status === 'TODO')}
+                                    />
 
-                            <KanbanColumn 
-                                title="Em andamento"
-                                tasks={tasks.filter(t => t.status === 'IN_PROGRESS')}
-                            />
+                                <KanbanColumn 
+                                    title="Em andamento"
+                                    status="IN_PROGRESS"
+                                    tasks={tasks.filter(t => t.status === 'IN_PROGRESS')}
+                                    />
 
-                            <KanbanColumn 
-                                title="Concluído"
-                                tasks={tasks.filter(t => t.status === 'DONE')}
-                            />
+                                <KanbanColumn 
+                                    title="Concluído"
+                                    status="DONE"
+                                    tasks={tasks.filter(t => t.status === 'DONE')}
+                                    />
 
-                        </div>
+                            </div>
+                        </DragDropContext>
                     </div>
                 )}
 

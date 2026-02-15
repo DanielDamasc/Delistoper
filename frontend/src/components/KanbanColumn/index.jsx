@@ -1,6 +1,7 @@
+import { Droppable } from "@hello-pangea/dnd";
 import TaskCard from "../TaskCard";
 
-const KanbanColumn = ({ title, tasks }) => {
+const KanbanColumn = ({ title, status, tasks }) => {
     return (
         <div className="w-full h-full flex flex-col bg-gray-100 rounded-xl border border-gray-200 border-t-4 border-t-indigo-600 shadow-sm">
 
@@ -11,17 +12,29 @@ const KanbanColumn = ({ title, tasks }) => {
                 </span>
             </div>
 
-            <div className="p-3 flex-1 overflow-y-auto min-h-[150px] flex flex-col gap-3">
-                {tasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
-                ))}
+            <Droppable droppableId={status}>
+                {(provided, snapshot) => (
+                    <div 
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`p-3 flex-1 overflow-y-auto min-h-[150px] flex flex-col gap-3
+                            ${snapshot.isDraggingOver ? 'bg-indigo-50/50' : ''}`}>
 
-                {tasks.length === 0 && (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg h-24 flex items-center justify-center text-gray-400 text-sm">
-                        No tasks.
+                        {tasks.map((task, index) => (
+                            <TaskCard key={task.id} task={task} index={index} />
+                        ))}
+
+                        {/* Placeholder cria o espaço vazio para o card cair. */}
+                        {provided.placeholder}
+
+                        {tasks.length === 0 && !snapshot.isDraggingOver && (
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg h-24 flex items-center justify-center text-gray-400 text-sm">
+                                No tasks.
+                            </div>
+                        )}
                     </div>
                 )}
-            </div>
+            </Droppable>
         </div>
     );
 }
