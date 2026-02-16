@@ -1,7 +1,7 @@
 import { Droppable } from "@hello-pangea/dnd";
 import TaskCard from "../TaskCard";
 
-const KanbanColumn = ({ title, status, tasks }) => {
+const KanbanColumn = ({ title, status, tasks, onDelete }) => {
     return (
         <div className="w-full h-full flex flex-col bg-gray-100 rounded-xl border border-gray-200 border-t-4 border-t-indigo-600 shadow-sm">
 
@@ -21,7 +21,7 @@ const KanbanColumn = ({ title, status, tasks }) => {
                             ${snapshot.isDraggingOver ? 'bg-indigo-50/50' : ''}`}>
 
                         {tasks.map((task, index) => (
-                            <TaskCard key={task.id} task={task} index={index} />
+                            <TaskCard key={task.id} task={task} index={index} onDelete={onDelete} />
                         ))}
 
                         {/* Placeholder cria o espaço vazio para o card cair. */}

@@ -94,6 +94,17 @@ const Project = () => {
         }
     }
 
+    const handleTaskDelete = async (taskId) => {
+        try {
+            await api.delete(`task/${taskId}`);
+
+            // Muda o estado na hora, mantendo somente os de ID diferente.
+            setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <div className="min-h-screen">
             <Header />
@@ -139,7 +150,7 @@ const Project = () => {
                                     <div className="flex flex-row gap-2">
 
                                         <CreateButton 
-                                            children={'New Task'}
+                                            children={'Task'}
                                             onClick={() => setIsModalOpen(true)}
                                         />
 
@@ -178,18 +189,21 @@ const Project = () => {
                                     title="A fazer"
                                     status="TODO"
                                     tasks={tasks.filter(t => t.status === 'TODO')}
+                                    onDelete={handleTaskDelete}
                                     />
 
                                 <KanbanColumn 
                                     title="Em andamento"
                                     status="IN_PROGRESS"
                                     tasks={tasks.filter(t => t.status === 'IN_PROGRESS')}
+                                    onDelete={handleTaskDelete}
                                     />
 
                                 <KanbanColumn 
                                     title="Concluído"
                                     status="DONE"
                                     tasks={tasks.filter(t => t.status === 'DONE')}
+                                    onDelete={handleTaskDelete}
                                     />
 
                             </div>

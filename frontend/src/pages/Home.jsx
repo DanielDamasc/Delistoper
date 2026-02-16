@@ -47,7 +47,7 @@ const Home = () => {
                     </div>
 
                     <CreateButton 
-                        children={'New Project'}
+                        children={'Project'}
                         onClick={() => setIsModalOpen(true)}
                     />
                 </div>

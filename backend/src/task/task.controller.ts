@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -24,4 +24,12 @@ export class TaskController {
     {
         return this.taskService.move(moveTaskDto, id);
     } 
+
+    @UseGuards(AuthGuard)
+    @Delete(':id')
+    async delete(
+        @Param('id', ParseIntPipe) id: number)
+    {
+        return this.taskService.delete(id);
+    }
 }

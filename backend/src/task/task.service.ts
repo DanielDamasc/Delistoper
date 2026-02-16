@@ -53,4 +53,12 @@ export class TaskService {
             data
         });
     }
+
+    async delete(taskId: number) {
+        return this.prismaService.prismaClient.task.delete({
+            where: {
+                id: taskId
+            }
+        });
+    }
 }

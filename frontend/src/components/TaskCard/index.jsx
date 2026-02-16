@@ -1,7 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { Calendar } from "lucide-react";
+import { Calendar, Trash2 } from "lucide-react";
 
-const TaskCard = ({ task, index }) => {
+const TaskCard = ({ task, index, onDelete }) => {
 
     // Estilos do status.
     const priorityStyles = {
@@ -9,6 +9,14 @@ const TaskCard = ({ task, index }) => {
         MEDIUM: { color: 'text-amber-600', bg: 'bg-amber-100', label: 'Média' },
         HIGH: { color: 'text-rose-600', bg: 'bg-rose-100', label: 'Alta' },
     };
+
+    const handleTaskDelete = (e) => {
+        // Impede que clicar no botão ative o drag and drop.
+        e.stopPropagation();
+
+        // Chama a onDelete do pai.
+        onDelete(task.id);
+    }
 
     return (
         <Draggable draggableId={task.id.toString()} index={index}>
@@ -23,11 +31,24 @@ const TaskCard = ({ task, index }) => {
                     style={provided.draggableProps.style}
                 >
                     
-                    <div className="flex justify-start items-start mb-2">
+                    <div className="flex justify-between items-start mb-2">
                         <span className={`text-xs font-semibold px-2 py-1 rounded-md flex items-center gap-1
                             ${priorityStyles[task.priority].bg} ${priorityStyles[task.priority].color}`}>
                                 {priorityStyles[task.priority].label}
                         </span>
+
+                        <button
+                            onClick={handleTaskDelete}
+                            
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onTouchStart={(e) => e.stopPropagation()}
+
+                            className="text-gray-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                            title="Deletar tarefa"
+                        >
+                            <Trash2 size={16} />
+                        </button>
+
                     </div>
 
                     <h4 className="font-semibold text-gray-800 text-sm mb-1 leading-snug">
