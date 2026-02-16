@@ -139,28 +139,30 @@ const Project = () => {
                             {/* Conteúdo Principal */}
                             <div className="flex-1 w-full">
 
-                                <div className="flex flex-row justify-between items-start md:items-center gap-4 mb-4">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                                     {/* Titulo + ID */}
-                                    <div className="flex items-center gap-3">
-                                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                                    <div className="flex-1 w-full">
+                                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 break-words">
                                             {project.name}
                                         </h1>
                                     </div>
 
-                                    <div className="flex flex-row gap-2">
+                                    <div className="flex flex-row gap-3 w-full sm:w-auto shrink-0 mt-1 sm:mt-0">
 
-                                        <CreateButton 
-                                            children={'Task'}
-                                            onClick={() => setIsModalOpen(true)}
-                                        />
+                                        <div className="flex-1 sm:flex-none">
+                                            <CreateButton 
+                                                children={'Task'}
+                                                onClick={() => setIsModalOpen(true)}
+                                            />
+                                        </div>
 
                                         <button
-                                            className="flex items-center
-                                                bg-red-600 hover:bg-red-700 text-white
-                                                text-sm md:text-base px-2.5
-                                                rounded-lg font-medium 
-                                                transition-all shadow-sm hover:shadow-md
-                                                active:scale-95"
+                                            className="flex items-center justify-center
+                                                text-red-500 bg-white border border-red-200 
+                                                hover:border-red-500 hover:bg-red-50 hover:text-red-600
+                                                text-sm md:text-base px-4 py-2 sm:p-2
+                                                rounded-lg transition-all 
+                                                active:scale-95 shrink-0"
                                             onClick={() => setIsDeleteOpen(true)}
                                         >
                                             <Trash2 size={20} />
